@@ -18,33 +18,25 @@ function getMsgFromLog(logString, msgId) {
     return result.notFound;
 
   // 检查第一条消息
-  values = logArr[0].split(' ');
+  lastValues = values = logArr[0].split(' ');
 
   // 检查名字
   UAVId = values[0];
   if (!checkUAVId(UAVId))
     return result.error;
   // 检查数值
-  for (var j = 1; j < values.length; j++) {
-    if (j === values.length - 1)
-      values[j] = values[j].trim();
+  if (!checkValues(values))
+    return result.error;
 
-    if (!isInteger(values[j]))
-      return result.error;
-
-    values[j] = parseInt(values[j]);
-  }
   if (msgId === 0)
     return `${UAVId} ${msgId} ${values[1]} ${values[2]} ${values[3]}`;
-
-  lastValues = values;
 
   // 检查后续消息
   for (i = 1; i < logArrLen; i++) {
     // 一个文件只记录一架无人机
     values = logArr[i].split(' ');
 
-    // 检查无人机ID
+    // 检查无人机ID, 一个文件只记录一架无人机的数据, 所以后续的id都是一致的
     if (UAVId !== values[0])
       return result.error;
 
@@ -53,15 +45,8 @@ function getMsgFromLog(logString, msgId) {
       return result.error;
 
     // 检查数据是否格式
-    for (var j = 1; j < values.length; j++) {
-      if (j === values.length - 1)
-        values[j] = values[j].trim();
-
-      if (!isInteger(values[j]))
-        return result.error;
-
-      values[j] = parseInt(values[j]);
-    }
+    if (!checkValues(values))
+      return result.error;
 
     // 验证数据值
     if (i === 1) {
@@ -89,8 +74,21 @@ function isInteger(string) {
 
 function checkUAVId(string) {
   var match = string.match(/[\w\d]+/);
-
   return match === null || match[0] === string;
+}
+
+function checkValues (values) {
+  for (var j = 1; j < values.length; j++) {
+    // 清楚末尾\r
+    if (j === values.length - 1)
+      values[j] = values[j].trim();
+
+    if (!isInteger(values[j]))
+      return false;
+
+    values[j] = parseInt(values[j]);
+  }
+  return true;
 }
 
 module.exports.default = getMsgFromLog;
