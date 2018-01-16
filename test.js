@@ -71,6 +71,20 @@ tester.push('测试msgId为: 2', function(expect){
   );
 });
 
+tester.push('测试msgId为: 3', function(expect){
+  expect(
+    getMsgFromLog(input, 3),
+    'Error: 3'
+  );
+});
+
+tester.push('测试msgId为: 4', function(expect){
+  expect(
+    getMsgFromLog(input, 4),
+    'Error: 4'
+  );
+});
+
 tester.push('测试msgId为: 100', function(expect){
   expect(
     getMsgFromLog(input, 100),
