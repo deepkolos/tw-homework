@@ -1,4 +1,4 @@
-var BENCHMARK_TIMES = 1000000;
+const BENCHMARK_TIMES = 1000000;
 
 console.time(`0+_benchmark(${BENCHMARK_TIMES})`);
 for (let i = 0; i < BENCHMARK_TIMES; i++) {
@@ -17,6 +17,8 @@ for (let i = 0; i < BENCHMARK_TIMES; i++) {
   parseInt("123123123123", 10);
 }
 console.timeEnd(`parseInt_benchmark(${BENCHMARK_TIMES})`);
+
+// ========================
 
 function checkUAVId(string) {
   var match = string.match(/[A-Za-z0-9]+/);

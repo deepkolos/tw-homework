@@ -1,3 +1,4 @@
+
 /**
  * 根据无人机记录, 查询某条消息无人机的坐标
  * 
@@ -6,11 +7,11 @@
  * @returns 
  */
 function getLocation(logString, signalIndex) {
-  var UAVId = null;
-  var values = null;
-  var lastValues = null;
-  var logArr = logString.split('\n');
-  var logArrLen = logArr.length;
+  var UAVId       = null;
+  var values      = null;
+  var lastValues  = null;
+  var logArr      = logString.split('\n');
+  var logArrLen   = logArr.length;
 
   var result = {
     error: `Error: ${signalIndex}`,

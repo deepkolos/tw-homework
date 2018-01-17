@@ -4,8 +4,8 @@ const isInteger   = require('./main').isInteger;
 const getLocation = require('./main').getLocation;
 const checkUAVId  = require('./main').checkUAVId;
 
-var input = fs.readFileSync('./input', 'utf8');
 var tester = new Tester;
+var input  = fs.readFileSync('./input', 'utf8');
 
 // 单元测试
 tester.push('checkUAVId(\'plane1\')', function(expect){
