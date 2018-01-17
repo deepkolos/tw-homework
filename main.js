@@ -6,65 +6,54 @@
  * @returns 
  */
 function getLocation(logString, signalIndex) {
-  var UAVId      = null;
-  var values     = null;
+  var UAVId = null;
+  var values = null;
   var lastValues = null;
-  var logArr     = logString.split('\n');
-  var logArrLen  = logArr.length;
+  var logArr = logString.split('\n');
+  var logArrLen = logArr.length;
 
   var result = {
     error: `Error: ${signalIndex}`,
     notFound: `Cannot find ${signalIndex}`,
   };
 
-  // signalIndex应该为正整数, 类型定义由注释给出
-  signalIndex = parseInt(signalIndex);
+  // signalIndex应该为十进制正整数, 类型定义由注释给出, 但是要求没有提供该类型的错误提示要求, 故修正之
+  // 由于性能考虑, 不做强制修正
+  signalIndex = +signalIndex;
 
   if (signalIndex > logArrLen || logArrLen === 0)
     return result.notFound;
 
   // 检查第一条消息
   lastValues = values = logArr[0].split(' ');
-
-  // 检查名字
   UAVId = values[0];
-  if (!checkUAVId(UAVId))
-    return result.error;
-  // 检查数值
-  if (!checkValues(values))
-    return result.error;
+
+  if (
+    !checkUAVId(UAVId) || // 检查名字
+    !checkValues(values)  // 检查数值
+  ) return result.error;
 
   if (signalIndex === 0)
     return `${UAVId} ${signalIndex} ${values[1]} ${values[2]} ${values[3]}`;
 
   // 检查后续消息
   for (var i = 1; i < logArrLen; i++) {
-    // 一个文件只记录一架无人机
     values = logArr[i].split(' ');
 
-    // 检查无人机ID, 一个文件只记录一架无人机的数据, 所以后续的id都是一致的
-    if (UAVId !== values[0])
-      return result.error;
+    if (
+      values[0] !== UAVId  || // 检查无人机ID, 一个文件只记录一架无人机的数据, 所以后续的id都是一致的
+      values.length !== 7  || // 检查数据项长度
+      !checkValues(values) || // 检查数据部分格式
 
-    // 检查数据长度
-    if (values.length !== 7)
-      return result.error;
-
-    // 检查数据是否格式
-    if (!checkValues(values))
-      return result.error;
-
-    // 验证数据值
-    if (i === 1) {
-      if (
+      i === 1 ? (             // 验证数据值, 第一条数据偏移值可视为0
         values[1] !== lastValues[1] ||
         values[2] !== lastValues[2] ||
         values[3] !== lastValues[3]
-      ) return result.error;
-    } else if (
-      values[1] !== lastValues[1] + lastValues[1 + 3] ||
-      values[2] !== lastValues[2] + lastValues[2 + 3] ||
-      values[3] !== lastValues[3] + lastValues[3 + 3]
+      ) : (
+        values[1] !== lastValues[1] + lastValues[1 + 3] ||
+        values[2] !== lastValues[2] + lastValues[2 + 3] ||
+        values[3] !== lastValues[3] + lastValues[3 + 3]
+      )
     ) return result.error;
 
     if (i === signalIndex)
@@ -75,13 +64,13 @@ function getLocation(logString, signalIndex) {
 }
 
 /**
- * 判断是否是整数
+ * 判断字符串是否是整数
  * 
  * @param {String} string 
  * @returns {Boolean}
  */
 function isInteger(string) {
-  return string === parseInt(string).toString();
+  return string === (+string).toString();
 }
 
 /**
@@ -101,20 +90,20 @@ function checkUAVId(string) {
  * @param {Array} values 
  * @returns {Boolean}
  */
-function checkValues (values) {
-  for (var j = 1; j < values.length; j++) {
+function checkValues(values) {
+  for (var j = 1, len = values.length; j < len; j++) {
     // 清楚末尾\r
-    if (j === values.length - 1)
+    if (j === len - 1)
       values[j] = values[j].trim();
 
     if (!isInteger(values[j]))
       return false;
 
-    values[j] = parseInt(values[j]);
+    values[j] = +values[j];
   }
   return true;
 }
 
-module.exports.isInteger   = isInteger;
-module.exports.checkUAVId  = checkUAVId;
+module.exports.isInteger = isInteger;
+module.exports.checkUAVId = checkUAVId;
 module.exports.getLocation = getLocation;
