@@ -1,8 +1,9 @@
-const fs = require('fs');
-const getMsgFromLog = require('./main').default;
-const checkUAVId = require('./main').checkUAVId;
-const isInteger = require('./main').isInteger;
-const Tester = require('./tester');
+const fs          = require('fs');
+const Tester      = require('./tester');
+const isInteger   = require('./main').isInteger;
+const getLocation = require('./main').getLocation;
+const checkUAVId  = require('./main').checkUAVId;
+
 var input = fs.readFileSync('./input', 'utf8');
 var tester = new Tester;
 
@@ -52,42 +53,42 @@ tester.push('isInteger(\'--123\')', function(expect){
 // 功能测试
 tester.push('测试msgId为: -1', function(expect){
   expect(
-    getMsgFromLog(input, -1),
+    getLocation(input, -1),
     'Error: -1'
   );
 });
 
 tester.push('测试msgId为: 0', function(expect){
   expect(
-    getMsgFromLog(input, 0),
+    getLocation(input, 0),
     'plane1 0 1 1 1'
   );
 });
 
 tester.push('测试msgId为: 2', function(expect){
   expect(
-    getMsgFromLog(input, 2),
+    getLocation(input, 2),
     'plane1 2 3 4 5'
   );
 });
 
 tester.push('测试msgId为: 3', function(expect){
   expect(
-    getMsgFromLog(input, 3),
+    getLocation(input, 3),
     'Error: 3'
   );
 });
 
 tester.push('测试msgId为: 4', function(expect){
   expect(
-    getMsgFromLog(input, 4),
+    getLocation(input, 4),
     'Error: 4'
   );
 });
 
 tester.push('测试msgId为: 100', function(expect){
   expect(
-    getMsgFromLog(input, 100),
+    getLocation(input, 100),
     'Cannot find 100'
   );
 });

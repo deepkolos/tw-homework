@@ -1,20 +1,26 @@
-const fs = require('fs');
-
-function getMsgFromLog(logString, msgId) {
-  var i = 0;
-  var values = null;
+/**
+ * 根据无人机记录, 查询某条消息无人机的坐标
+ * 
+ * @param {String} logString 
+ * @param {Number} signalIndex 
+ * @returns 
+ */
+function getLocation(logString, signalIndex) {
+  var UAVId      = null;
+  var values     = null;
   var lastValues = null;
-  var logArr = logString.split('\n');
-  var logArrLen = logArr.length;
-  var UAVId = null;
+  var logArr     = logString.split('\n');
+  var logArrLen  = logArr.length;
+
   var result = {
-    error: `Error: ${msgId}`,
-    notFound: `Cannot find ${msgId}`,
+    error: `Error: ${signalIndex}`,
+    notFound: `Cannot find ${signalIndex}`,
   };
 
-  msgId = parseInt(msgId);
+  // signalIndex应该为正整数, 类型定义由注释给出
+  signalIndex = parseInt(signalIndex);
 
-  if (msgId > logArrLen || logArrLen === 0)
+  if (signalIndex > logArrLen || logArrLen === 0)
     return result.notFound;
 
   // 检查第一条消息
@@ -28,11 +34,11 @@ function getMsgFromLog(logString, msgId) {
   if (!checkValues(values))
     return result.error;
 
-  if (msgId === 0)
-    return `${UAVId} ${msgId} ${values[1]} ${values[2]} ${values[3]}`;
+  if (signalIndex === 0)
+    return `${UAVId} ${signalIndex} ${values[1]} ${values[2]} ${values[3]}`;
 
   // 检查后续消息
-  for (i = 1; i < logArrLen; i++) {
+  for (var i = 1; i < logArrLen; i++) {
     // 一个文件只记录一架无人机
     values = logArr[i].split(' ');
 
@@ -61,22 +67,40 @@ function getMsgFromLog(logString, msgId) {
       values[3] !== lastValues[3] + lastValues[3 + 3]
     ) return result.error;
 
-    if (i === msgId)
-      return `${UAVId} ${msgId} ${values[1] + values[1 + 3]} ${values[2] + values[2 + 3]} ${values[3] + values[3 + 3]}`;
+    if (i === signalIndex)
+      return `${UAVId} ${signalIndex} ${values[1] + values[1 + 3]} ${values[2] + values[2 + 3]} ${values[3] + values[3 + 3]}`;
 
     lastValues = values;
   }
 }
 
+/**
+ * 判断是否是整数
+ * 
+ * @param {String} string 
+ * @returns {Boolean}
+ */
 function isInteger(string) {
   return string === parseInt(string).toString();
 }
 
+/**
+ * 检查无人机ID是否合法
+ * 
+ * @param {String} string 
+ * @returns {Boolean}
+ */
 function checkUAVId(string) {
   var match = string.match(/[A-Za-z0-9]+/);
   return match === null || match[0] === string;
 }
 
+/**
+ * 用于检查一行记录的数值部分是否合法
+ * 
+ * @param {Array} values 
+ * @returns {Boolean}
+ */
 function checkValues (values) {
   for (var j = 1; j < values.length; j++) {
     // 清楚末尾\r
@@ -91,6 +115,6 @@ function checkValues (values) {
   return true;
 }
 
-module.exports.default = getMsgFromLog;
-module.exports.checkUAVId = checkUAVId;
-module.exports.isInteger = isInteger;
+module.exports.isInteger   = isInteger;
+module.exports.checkUAVId  = checkUAVId;
+module.exports.getLocation = getLocation;
