@@ -168,6 +168,17 @@ checkUAVId_benchmark(1000000): 84.97998046875ms
 
 > 两者性能差距不大, 并且仅仅格式仅仅检查一次, 故不采用checkUAVId_2
 
+前面是在浏览器的环境测试, 后面在node的环境跑了一次, 发现结果有差异
+
+```shell
+> npm run perf
+0+_benchmark(1000000): 27.648ms
++_benchmark(1000000): 11.127ms
+parseInt_benchmark(1000000): 124.930ms
+checkUAVId_2_benchmark(1000000): 84.154ms
+checkUAVId_benchmark(1000000): 103.684ms
+```
+
 #### 其他性能考虑
 
 0. 目前接口方式对于多次接口调用性能优化不利, 非要采取这样的形式可以在内部使用缓存, 但是不如做接口调整

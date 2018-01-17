@@ -19,7 +19,7 @@ function getLocation(logString, signalIndex) {
 
   // signalIndex应该为十进制正整数, 类型定义由注释给出, 但是要求没有提供该类型的错误提示要求, 故修正之
   // 由于性能考虑, 不做强制修正
-  signalIndex = 0+signalIndex;
+  signalIndex = +signalIndex;
 
   if (signalIndex > logArrLen || logArrLen === 0)
     return result.notFound;
@@ -70,7 +70,7 @@ function getLocation(logString, signalIndex) {
  * @returns {Boolean}
  */
 function isInteger(string) {
-  return string === (0+string).toString();
+  return string === (+string).toString();
 }
 
 /**
@@ -99,7 +99,7 @@ function checkValues(values) {
     if (!isInteger(values[j]))
       return false;
 
-    values[j] = 0+values[j];
+    values[j] = +values[j];
   }
   return true;
 }
