@@ -30,8 +30,8 @@
 0. 记录着无人机活动信号的文本文件(或者文本内容)
 1. 一个消息序号(Signal Index), 该序号代表着第几条消息(序号从0开始)
 
+消息序号为: **十进制正整数**\
 文本文件可以是文件路径? 文本内容的编码约定?
-消息序号为: **十进制正整数**
 
 根据要求理解出来当无人机正常的记录文件格式:
 
@@ -87,6 +87,12 @@ VM148:1 9007199254740996
 ```javascript
 var BENCHMARK_TIMES = 1000000
 
+console.time(`0+_benchmark(${BENCHMARK_TIMES})`);
+for (let i = 0; i < BENCHMARK_TIMES; i++) {
+  0+"123123123123";
+}
+console.timeEnd(`0+_benchmark(${BENCHMARK_TIMES})`);
+
 console.time(`+_benchmark(${BENCHMARK_TIMES})`);
 for (let i = 0; i < BENCHMARK_TIMES; i++) {
   +"123123123123";
@@ -102,11 +108,13 @@ console.timeEnd(`parseInt_benchmark(${BENCHMARK_TIMES})`);
 
 output:
 ```
+0+_benchmark(1000000): 3.39111328125ms
 +_benchmark(1000000): 9.85888671875ms
 parseInt()_benchmark(1000000): 185.21484375ms
 ```
 
 > 由于性能的差距过大, 并且已经均假设是十进制, 故采用+"123"的方式来做类型转换
+> 后面补充测试0+""效果更好~
 
 #### checkUAVId优化
 
@@ -163,5 +171,5 @@ checkUAVId_benchmark(1000000): 84.97998046875ms
 #### 其他性能考虑
 
 0. 目前接口方式对于多次接口调用性能优化不利, 非要采取这样的形式可以在内部使用缓存, 但是不如做接口调整
-1. 理想的执行方式一次性/按需生成可再次使用的数据结构, 就是说写数据库...解析一次多次轻松读, 而不是解析一次读一次
+1. 理想的执行方式一次性/按需生成可再次使用的数据结构, 就是用数据库...解析一次多次轻松读, 而不是解析一次读一次
 
