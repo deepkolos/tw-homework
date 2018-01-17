@@ -81,7 +81,7 @@ VM148:1 9007199254740996
 
 parseInt("123123123123", 10) vs +"123123123123"
 
-```
+```javascript
 var BENCHMARK_TIMES = 1000000
 
 console.time(`+_benchmark(${BENCHMARK_TIMES})`);
@@ -101,4 +101,54 @@ output:
 parseInt()_benchmark(1000000): 185.21484375ms
 ```
 
-> 由于性能的差距过大, 并且已经均假设是十进制, 故采用+"123"的方式来做字符串转换整形
+> 由于性能的差距过大, 并且已经均假设是十进制, 故采用+"123"的方式来做类型转换
+
+```javascript
+function checkUAVId(string) {
+  var match = string.match(/[A-Za-z0-9]+/);
+  return match === null || match[0] === string;
+}
+
+function checkUAVId_2(string) {
+  var i = 0;
+  var len = string.length;
+  var charCode;
+
+  for (; i < len; i++) {
+    charCode = string.charCodeAt(i);
+
+    if (
+      charCode > 122 ||
+      charCode < 48  ||
+      (
+        charCode > 90 &&
+        charCode < 97
+      ) || (
+        charCode > 57 &&
+        charCode < 65
+      )
+    ) return false;
+  }
+  return true;
+}
+```
+
+```javascript
+console.time(`checkUAVId_2_benchmark(${BENCHMARK_TIMES})`);
+for (let i = 0; i < BENCHMARK_TIMES; i++) {
+  checkUAVId_2('1231312edasdasdqwdADAD')
+}
+console.timeEnd(`checkUAVId_2_benchmark(${BENCHMARK_TIMES})`);
+
+console.time(`checkUAVId_benchmark(${BENCHMARK_TIMES})`);
+for (let i = 0; i < BENCHMARK_TIMES; i++) {
+  checkUAVId('1231312edasdasdqwdADAD')
+}
+console.timeEnd(`checkUAVId_benchmark(${BENCHMARK_TIMES})`);
+
+output:
+checkUAVId_2_benchmark(1000000): 83.3671875ms
+checkUAVId_benchmark(1000000): 84.97998046875ms
+```
+
+> 两者性能差距不大, 并且仅仅格式仅仅检查一次, 故不采用checkUAVId_2

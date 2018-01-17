@@ -45,7 +45,7 @@ function getLocation(logString, signalIndex) {
       values.length !== 7  || // 检查数据项长度
       !checkValues(values) || // 检查数据部分格式
 
-      i === 1 ? (             // 验证数据值, 第一条数据偏移值可视为0
+      i === 1 ? (             // 验证数据值, 第0条数据的偏移值可视为0
         values[1] !== lastValues[1] ||
         values[2] !== lastValues[2] ||
         values[3] !== lastValues[3]
@@ -106,4 +106,5 @@ function checkValues(values) {
 
 module.exports.isInteger = isInteger;
 module.exports.checkUAVId = checkUAVId;
+module.exports.checkUAVId_2 = checkUAVId_2;
 module.exports.getLocation = getLocation;
