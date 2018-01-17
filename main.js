@@ -106,5 +106,4 @@ function checkValues(values) {
 
 module.exports.isInteger = isInteger;
 module.exports.checkUAVId = checkUAVId;
-module.exports.checkUAVId_2 = checkUAVId_2;
 module.exports.getLocation = getLocation;

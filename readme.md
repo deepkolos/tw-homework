@@ -15,10 +15,10 @@
 ```
 
 ### TODO
-0. isInteger, checkUAVId优化
-1. 整合重复的流程 done
-2. 性能方面的考虑
-3. 变量名字语义加强 done
+0. isInteger, checkUAVId优化 done
+1. 整合重复的流程           done
+2. 性能方面的考虑           
+3. 变量名字语义加强         done
 
 ### 试题理解
 
@@ -79,7 +79,7 @@ VM148:1 9007199254740996
 
 ### 性能考虑
 
-parseInt("123123123123", 10) vs +"123123123123"
+#### parseInt("123123123123", 10) vs +"123123123123"
 
 ```javascript
 var BENCHMARK_TIMES = 1000000
@@ -95,13 +95,17 @@ for (let i = 0; i < BENCHMARK_TIMES; i++) {
   parseInt("123123123123", 10);
 }
 console.timeEnd(`parseInt_benchmark(${BENCHMARK_TIMES})`);
+```
 
 output:
+```
 +_benchmark(1000000): 9.85888671875ms
 parseInt()_benchmark(1000000): 185.21484375ms
 ```
 
 > 由于性能的差距过大, 并且已经均假设是十进制, 故采用+"123"的方式来做类型转换
+
+#### checkUAVId优化
 
 ```javascript
 function checkUAVId(string) {
@@ -131,9 +135,7 @@ function checkUAVId_2(string) {
   }
   return true;
 }
-```
 
-```javascript
 console.time(`checkUAVId_2_benchmark(${BENCHMARK_TIMES})`);
 for (let i = 0; i < BENCHMARK_TIMES; i++) {
   checkUAVId_2('1231312edasdasdqwdADAD')
@@ -145,8 +147,10 @@ for (let i = 0; i < BENCHMARK_TIMES; i++) {
   checkUAVId('1231312edasdasdqwdADAD')
 }
 console.timeEnd(`checkUAVId_benchmark(${BENCHMARK_TIMES})`);
+```
 
 output:
+```
 checkUAVId_2_benchmark(1000000): 83.3671875ms
 checkUAVId_benchmark(1000000): 84.97998046875ms
 ```
