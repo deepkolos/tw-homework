@@ -46,7 +46,7 @@
 
 ### 临界条件考虑
 
-需要考虑无人机记录下来的数据运算时无溢出, 经过测试js支持超长数据运算
+需要考虑无人机记录下来的数据运算时无溢出
 
 经过google查询到博客[JavaScript实验：数值范围
 ](http://blog.shaochuancs.com/javascript-number-range/), 还有[这篇](https://waylau.com/long-number-in-javascript/)
