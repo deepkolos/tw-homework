@@ -73,7 +73,7 @@ function isInteger(string) {
 }
 
 function checkUAVId(string) {
-  var match = string.match(/[\w\d]+/);
+  var match = string.match(/[A-Za-z0-9]+/);
   return match === null || match[0] === string;
 }
 
