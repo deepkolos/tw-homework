@@ -93,7 +93,7 @@ function checkUAVId(string) {
  */
 function checkValues(values) {
   for (var j = 1, len = values.length; j < len; j++) {
-    // 清楚末尾\r
+    // 清除末尾\r
     if (j === len - 1)
       values[j] = values[j].trim();
 
